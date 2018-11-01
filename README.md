@@ -11,6 +11,7 @@ $ npm install telegraf-session-mongodb
 ## Example
 
 ```js
+const { TelegrafMongoSession } = require('telegraf-session-mongodb');
 const { MongoClient } = require('mongodb');
 const Telegraf = require('telegraf');
 const bot = new Telegraf(process.env.TOKEN);
