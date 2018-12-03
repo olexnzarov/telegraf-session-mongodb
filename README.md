@@ -8,7 +8,19 @@ MongoDB powered simple session middleware for [Telegraf](https://github.com/tele
 $ npm install telegraf-session-mongodb
 ```
 
-## Example
+## Example (Simple)
+
+```js
+const { TelegrafMongoSession } = require('telegraf-session-mongodb');
+const Telegraf = require('telegraf');
+const bot = new Telegraf(process.env.TOKEN);
+
+TelegrafMongoSession.setup(bot, process.ENV.MONGODB_URI);
+
+bot.startPolling();
+```
+
+## Example (Advanced)
 
 ```js
 const { TelegrafMongoSession } = require('telegraf-session-mongodb');
@@ -30,6 +42,10 @@ MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }).then((cl
 ```
 
 ## API
+
+### Simple Setup
+
+* TelegrafMongoSession.setup(_bot_, _mongodb\_url_, _options_)
 
 ### Options
 

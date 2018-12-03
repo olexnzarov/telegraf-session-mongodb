@@ -26,6 +26,22 @@ class TelegrafMongoSession {
         await next();
         await this.saveSession(key, ctx[this.options.sessionName] || { });
     }
+
+    static setup(bot, mongo_url, params = {}) {
+        let session;
+        bot.use((...args) => session.middleware(...args));
+        
+        const { MongoClient } = require('mongodb');
+        MongoClient.connect(mongo_url, { useNewUrlParser: true }).then((client) => {
+            const db = client.db();
+            session = new TelegrafMongoSession(db, params);
+        }).catch((reason) => { 
+            console.log('telegraf-session-mongodb: failed to connect to the database, session saving will not work.')
+            console.log(reason);
+
+            session = { middleware: function(ctx, next) { next(); } }
+        });
+    }
 }
 
 exports.middleware = (db, options = {}) => {

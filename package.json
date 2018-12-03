@@ -1,6 +1,6 @@
 {
   "name": "telegraf-session-mongodb",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "MongoDB session middleware for Telegraf",
   "main": "index.js",
   "scripts": {
@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/krekeris/telegraf-session-mongodb/issues"
   },
-  "homepage": "https://github.com/krekeris/telegraf-session-mongodb#readme"
+  "homepage": "https://github.com/krekeris/telegraf-session-mongodb#readme",
+  "dependencies": {
+    "mongodb": "^3.1.10"
+  }
 }
