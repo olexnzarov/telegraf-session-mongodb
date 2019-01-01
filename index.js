@@ -14,7 +14,7 @@ class TelegrafMongoSession {
 
     async getSession(key) {
         const doc = await this.collection.findOne({ key: key });
-        return doc ? doc.data : {};;
+        return doc ? doc.data : {};
     }
 
     async middleware(ctx, next) {
