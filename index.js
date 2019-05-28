@@ -18,13 +18,18 @@ class TelegrafMongoSession {
     }
 
     async middleware(ctx, next) {
+        if (!ctx.chat || !ctx.from) {
+            await next();
+            return;
+        }
+
         const key = `${ctx.chat.id}:${ctx.from.id}`;
         const session = await this.getSession(key);
 
         ctx[this.options.sessionName] = session;
 
         await next();
-        await this.saveSession(key, ctx[this.options.sessionName] || { });
+        await this.saveSession(key, ctx[this.options.sessionName] || {});
     }
 
     static setup(bot, mongo_url, params = {}) {
