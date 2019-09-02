@@ -37,7 +37,7 @@ class TelegrafMongoSession {
         bot.use((...args) => session.middleware(...args));
         
         const { MongoClient } = require('mongodb');
-        MongoClient.connect(mongo_url, { useNewUrlParser: true }).then((client) => {
+        MongoClient.connect(mongo_url, { useNewUrlParser: true, useUnifiedTopology: true }).then((client) => {
             const db = client.db();
             session = new TelegrafMongoSession(db, params);
         }).catch((reason) => { 
