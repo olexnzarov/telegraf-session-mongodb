@@ -18,12 +18,21 @@ class TelegrafMongoSession {
     }
 
     async middleware(ctx, next) {
-        if (!ctx.chat || !ctx.from) {
+        if (!ctx.from || (!ctx.chat && ['callback_query', 'inline_query'].indexOf(ctx.updateType) === -1)) {
             await next();
             return;
         }
 
-        const key = `${ctx.chat.id}:${ctx.from.id}`;
+        let chatId;
+        if (ctx.chat) {
+            chatId = ctx.chat.id;
+        } else if (ctx.updateType === 'callback_query') {
+            chatId = ctx.callbackQuery.chat_instance;
+        } else if (ctx.updateType === 'inline_query') {
+            chatId = ctx.from.id;
+        }
+
+        const key = `${chatId}:${ctx.from.id}`;
         const session = await this.getSession(key);
 
         ctx[this.options.sessionName] = session;
