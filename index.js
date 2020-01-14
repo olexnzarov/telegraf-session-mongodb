@@ -44,12 +44,12 @@ class TelegrafMongoSession {
     static setup(bot, mongo_url, params = {}) {
         let session;
         bot.use((...args) => session.middleware(...args));
-        
+
         const { MongoClient } = require('mongodb');
-        MongoClient.connect(mongo_url, { useNewUrlParser: true, useUnifiedTopology: true }).then((client) => {
+        return MongoClient.connect(mongo_url, { useNewUrlParser: true, useUnifiedTopology: true }).then((client) => {
             const db = client.db();
             session = new TelegrafMongoSession(db, params);
-        }).catch((reason) => { 
+        }).catch((reason) => {
             console.log('telegraf-session-mongodb: failed to connect to the database, session saving will not work.')
             console.log(reason);
 
