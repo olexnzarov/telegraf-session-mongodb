@@ -15,9 +15,9 @@ const { TelegrafMongoSession } = require('telegraf-session-mongodb');
 const Telegraf = require('telegraf');
 const bot = new Telegraf(process.env.TOKEN);
 
-TelegrafMongoSession.setup(bot, process.ENV.MONGODB_URI);
-
-bot.startPolling();
+TelegrafMongoSession.setup(bot, process.ENV.MONGODB_URI)
+  .then((client) => bot.launch())
+  .catch((err) => console.log(`Failed to connect to the database: ${err}`));
 ```
 
 ## Example (Advanced)

@@ -1,6 +1,6 @@
 {
   "name": "telegraf-session-mongodb",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "MongoDB session middleware for Telegraf",
   "main": "index.js",
   "scripts": {

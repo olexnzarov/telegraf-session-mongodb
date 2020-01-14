@@ -17,22 +17,17 @@ class TelegrafMongoSession {
         return doc ? doc.data : {};
     }
 
+    getSessionKey(ctx) {
+        // if ctx has chat object, we use chat.id
+        // if ctx has callbackquery object, we use cb.chat_instance
+        // if ctx does not have any of the fields mentioned above, we use from.id
+
+        const id = ctx.chat ? ctx.chat.id : (ctx.callbackQuery ? ctx.callbackQuery.chat_instance : ctx.from.id);
+        return `${id}:${ctx.from.id}`;
+    }
+
     async middleware(ctx, next) {
-        if (!ctx.from || (!ctx.chat && ['callback_query', 'inline_query'].indexOf(ctx.updateType) === -1)) {
-            await next();
-            return;
-        }
-
-        let chatId;
-        if (ctx.chat) {
-            chatId = ctx.chat.id;
-        } else if (ctx.updateType === 'callback_query') {
-            chatId = ctx.callbackQuery.chat_instance;
-        } else if (ctx.updateType === 'inline_query') {
-            chatId = ctx.from.id;
-        }
-
-        const key = `${chatId}:${ctx.from.id}`;
+        const key = this.getSessionKey(ctx);
         const session = await this.getSession(key);
 
         ctx[this.options.sessionName] = session;
@@ -41,20 +36,17 @@ class TelegrafMongoSession {
         await this.saveSession(key, ctx[this.options.sessionName] || {});
     }
 
-    static setup(bot, mongo_url, params = {}) {
+    static async setup(bot, mongo_url, params = {}) {
         let session;
         bot.use((...args) => session.middleware(...args));
 
         const { MongoClient } = require('mongodb');
-        return MongoClient.connect(mongo_url, { useNewUrlParser: true, useUnifiedTopology: true }).then((client) => {
-            const db = client.db();
-            session = new TelegrafMongoSession(db, params);
-        }).catch((reason) => {
-            console.log('telegraf-session-mongodb: failed to connect to the database, session saving will not work.')
-            console.log(reason);
+        const client = await MongoClient.connect(mongo_url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const db = client.db();
 
-            session = { middleware: function(ctx, next) { next(); } }
-        });
+        session = new TelegrafMongoSession(db, params);
+
+        return client;
     }
 }
 
