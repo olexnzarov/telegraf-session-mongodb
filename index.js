@@ -20,20 +20,24 @@ class TelegrafMongoSession {
     getSessionKey(ctx) {
         // if ctx has chat object, we use chat.id
         // if ctx has callbackquery object, we use cb.chat_instance
-        // if ctx does not have any of the fields mentioned above, we use from.id
+        // if ctx does not have any of the fields mentioned above, we try to use from.id (from is undefined in anonymous polls)
 
-        const id = ctx.chat ? ctx.chat.id : (ctx.callbackQuery ? ctx.callbackQuery.chat_instance : ctx.from.id);
-        return `${id}:${ctx.from.id}`;
+        const id = ctx.chat ? ctx.chat.id : (ctx.callbackQuery ? ctx.callbackQuery.chat_instance : (ctx.from || {}).id);
+        return id ? `${id}:${(ctx.from||{}).id}` : undefined;
     }
 
     async middleware(ctx, next) {
         const key = this.getSessionKey(ctx);
-        const session = await this.getSession(key);
-
-        ctx[this.options.sessionName] = session;
-
-        await next();
-        await this.saveSession(key, ctx[this.options.sessionName] || {});
+        if (key) {
+            const session = await this.getSession(key);      
+            
+            ctx[this.options.sessionName] = session;    
+            
+            await next();
+            await this.saveSession(key, ctx[this.options.sessionName] || {});
+        } else {
+            await next();
+        }
     }
 
     static async setup(bot, mongo_url, params = {}) {
