@@ -4,6 +4,7 @@
   "description": "MongoDB session middleware for Telegraf",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,5 +31,11 @@
   "homepage": "https://github.com/krekeris/telegraf-session-mongodb#readme",
   "dependencies": {
     "mongodb": "^3.1.10"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.5.5",
+    "@types/node": "^13.11.1",
+    "telegraf": "^3.37.0",
+    "typescript": "^3.8.3"
   }
 }
