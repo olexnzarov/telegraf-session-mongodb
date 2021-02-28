@@ -58,4 +58,4 @@ MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnified
 
 * `collectionName`: name for MongoDB collection (default: `sessions`)
 * `sessionName`: context property name (default: `session`)
-* `sessionKeyFn`: function that generates the session key from the context
+* `sessionKeyFn`: function that generates the session key from the context ([default implementation](https://github.com/alexnzarov/telegraf-session-mongodb/blob/master/src/keys.ts#L10-L16), [legacy deprecated function](https://github.com/alexnzarov/telegraf-session-mongodb/blob/master/src/keys.ts#L21-L31))
