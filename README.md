@@ -14,6 +14,8 @@ $ yarn add telegraf-session-mongodb
 
 ## Example
 
+[Full JavaScript example can be found here.](https://github.com/alexnzarov/telegraf-session-mongodb-examples/tree/master/javascript-example)
+
 ```js
 const { Telegraf } = require('telegraf');
 const { MongoClient } = require('mongodb');
@@ -29,6 +31,8 @@ MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnified
 ```
 
 ## Example (TypeScript)
+
+[Full TypeScript example can be found here.](https://github.com/alexnzarov/telegraf-session-mongodb-examples/tree/master/typescript-example)
 
 ```ts
 import { Context, Telegraf } from 'telegraf';
