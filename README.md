@@ -1,6 +1,6 @@
 # MongoDB session middleware for Telegraf
 
-MongoDB powered simple session middleware for [Telegraf](https://github.com/telegraf/telegraf).
+MongoDB powered simple session middleware for [Telegraf 4.0](https://github.com/telegraf/telegraf) with TypeScript support.
 
 ## Installation
 
@@ -8,46 +8,50 @@ MongoDB powered simple session middleware for [Telegraf](https://github.com/tele
 $ npm install telegraf-session-mongodb
 ```
 
-## Example (Simple)
-
 ```js
-const { TelegrafMongoSession } = require('telegraf-session-mongodb');
-const Telegraf = require('telegraf');
-const bot = new Telegraf(process.env.TOKEN);
-
-TelegrafMongoSession.setup(bot, process.ENV.MONGODB_URI)
-  .then((client) => bot.launch())
-  .catch((err) => console.log(`Failed to connect to the database: ${err}`));
+$ yarn add telegraf-session-mongodb
 ```
 
-## Example (Advanced)
+## Example
 
 ```js
-const { TelegrafMongoSession } = require('telegraf-session-mongodb');
+const { Telegraf } = require('telegraf');
 const { MongoClient } = require('mongodb');
-const Telegraf = require('telegraf');
-const bot = new Telegraf(process.env.TOKEN);
+const { session } = require('telegraf-session-mongodb');
 
-let session;
-bot.use((...args) => session.middleware(...args));
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
-MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }).then((client) => {
+MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(client => {
     const db = client.db();
-    session = new TelegrafMongoSession(db, {
-      collectionName: 'sessions',
-      sessionName: 'session'
-    });
-    bot.startPolling();
-});
+    bot.use(session(db, { collectionName: 'sessions' }));
+  });
+```
+
+## Example (TypeScript)
+
+```ts
+import { Context, Telegraf } from 'telegraf';
+import { MongoClient } from 'mongodb';
+import { session } from 'telegraf-session-mongodb';
+
+export interface SessionContext extends Context {
+  session: any;
+};
+
+const bot = new Telegraf<SessionContext>(process.env.BOT_TOKEN);
+
+MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(client => {
+    const db = client.db();
+    bot.use(session(db, { sessionName: 'session', collectionName: 'sessions' }));
+  });
 ```
 
 ## API
-
-### Simple Setup
-
-* TelegrafMongoSession.setup(_bot_, _mongodb\_url_, _options_)
 
 ### Options
 
 * `collectionName`: name for MongoDB collection (default: `sessions`)
 * `sessionName`: context property name (default: `session`)
+* `sessionKeyFn`: function that generates the session key from the context

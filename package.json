@@ -1,14 +1,19 @@
 {
   "name": "telegraf-session-mongodb",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "MongoDB session middleware for Telegraf",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "tsc",
+    "build:clean": "npm run clean && npm run build",
+    "prepublish": "npm run build:clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/krekeris/telegraf-session-mongodb.git"
+    "url": "git+ssh://git@github.com/alexnzarov/telegraf-session-mongodb.git"
   },
   "keywords": [
     "telegraf",
@@ -20,15 +25,20 @@
     "bot"
   ],
   "author": {
-    "name": "krekeris",
-    "email": "alxkrekeris@gmail.com"
+    "name": "alexnzarov",
+    "email": "alexnzarov@gmail.com"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/krekeris/telegraf-session-mongodb/issues"
+    "url": "https://github.com/alexnzarov/telegraf-session-mongodb/issues"
   },
-  "homepage": "https://github.com/krekeris/telegraf-session-mongodb#readme",
+  "homepage": "https://github.com/alexnzarov/telegraf-session-mongodb#readme",
   "dependencies": {
-    "mongodb": "^3.1.10"
+    "mongodb": "^3.6.4"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.6.8",
+    "telegraf": "^4.1.1",
+    "typescript": "^4.2.2"
   }
 }
