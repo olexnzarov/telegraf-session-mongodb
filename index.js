@@ -2,7 +2,8 @@ class TelegrafMongoSession {
     constructor(db, options) {
         this.options = Object.assign({
             sessionName: 'session',
-            collectionName: 'sessions'
+            collectionName: 'sessions',
+            sessionKeyFn: null
         }, options);
         this.db = db;
         this.collection = db.collection(this.options.collectionName);
@@ -18,6 +19,12 @@ class TelegrafMongoSession {
     }
 
     getSessionKey(ctx) {
+        const sessionKeyFn = this.options.sessionKeyFn;
+        
+        if (sessionKeyFn != null) {
+            return sessionKeyFn(ctx);
+        }
+
         // if ctx has chat object, we use chat.id
         // if ctx has callbackquery object, we use cb.chat_instance
         // if ctx does not have any of the fields mentioned above, we use from.id
