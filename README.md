@@ -51,3 +51,4 @@ MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }).then((cl
 
 * `collectionName`: name for MongoDB collection (default: `sessions`)
 * `sessionName`: context property name (default: `session`)
+* `sessionKeyFn`: function that generates the session key from the context ([default implementation](https://github.com/alexnzarov/telegraf-session-mongodb/blob/legacy/index.js#L21))
